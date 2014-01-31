@@ -319,11 +319,19 @@
 
 - (IBAction)editProximityUUIDAction:(id)sender
 {
-	UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Not yet implemented"
-													 message:@"At this time, Estimote don't support UUID edition."
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Update proximity UUID"
+													 message:@""
 													delegate:self
-										   cancelButtonTitle:@"OK"
-										   otherButtonTitles:nil];
+										   cancelButtonTitle:@"Cancel"
+										   otherButtonTitles:@"OK", nil];
+	
+	alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+	
+	[[alert textFieldAtIndex:0] setKeyboardType:UIKeyboardTypeAlphabet];
+	[alert textFieldAtIndex:0].text = self.proximityUUIDButton.title;
+	
+	_selectorForEditingAlert = @selector(editProximityUUIDWithString:);
+	
 	[alert show];
 }
 
@@ -454,6 +462,27 @@
 		[self decreaseAsyncAction];
 	}];
 }
+
+- (void)editProximityUUIDWithString:(NSString*)UUIDString
+{
+	[self increaseAsyncAction];
+    [self.beacon writeBeaconProximityUUID:UUIDString withCompletion:^(NSString *value, NSError *error) {
+        
+        if (error) {
+			UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Estimote write error"
+                                                            message:[error localizedDescription]
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+			
+			[alert show];
+		}
+		
+		[self updateUI];
+		[self decreaseAsyncAction];
+    }];
+}
+
 
 #pragma mark - ESTBeaconDelegate
 

@@ -67,7 +67,8 @@
 																	 action:@selector(showCredits)];
 	[self.navigationItem setLeftBarButtonItem:barButtonItem];
 	
-	ESTBeaconRegion* region = [[ESTBeaconRegion alloc] initRegionWithIdentifier:ESTIMOTE_REGION_ALL];
+	ESTBeaconRegion* region = [[ESTBeaconRegion alloc] initWithProximityUUID:ESTIMOTE_PROXIMITY_UUID
+                                                                  identifier:ESTIMOTE_REGION_ALL];
 	[self.beaconManager startRangingBeaconsInRegion:region];
 }
 
